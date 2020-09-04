@@ -5,8 +5,8 @@ import NoteProvider from './components/NoteProvider';
 function App() {
   return (
     <div className="App">
-        Hello
-    
+      <NoteProvider className="noteProvider">
+      </NoteProvider>
     </div>
   );
 }
