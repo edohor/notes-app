@@ -1,19 +1,54 @@
 .noteContainer {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 10px;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 20px;
     grid-auto-rows: minmax(100px, auto);
     margin: 50px auto;
     width: 80%;
+    max-width: 80%;
 }
 
 .note {
-    border: 1px solid black;
-    border-radius: 3px;
-    text-align: center;
-    line-height: 100%;
+    box-sizing:border-box;
+    border-radius: 10px;
     padding: 20px;
+    width: 200px;
     height: 200px;
+    word-wrap: break-word;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.15);
+}
+.note:hover{
+    cursor: pointer;
+    border: 3px solid #B90445;
+}
+
+.addNote {
+    border: 1px solid #B90445;
+    background-color: #B90445;
+    text-align: center;
+    box-shadow: none;
+}
+.addNote:hover{
+    cursor: pointer;
+    border: 1px solid #B90445;
+}
+
+.bigWhitePlus{
+    color: white;
+    font-weight: 500;
+    font-size: 64px;
+    line-height: 135px;
+    width: 200px;
+    height: 198px;
+    align-items: center;
+    text-align: center;
+    
+    -webkit-user-select:none;
+    -khtml-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    -o-user-select:none;
+    user-select:none;
 }
 
 .modal {
@@ -35,11 +70,12 @@
     margin: 6% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
-    width: 70%; /* Could be more or less, depending on screen size */
+    width: 50%; /* Could be more or less, depending on screen size */
   }
 
   .tools{
       height: 30px;
+      padding: 0 10px
   }
   
   /* The Close Button */
@@ -75,5 +111,36 @@
       padding: 15px;
   }
   .textInput:focus {
-      border: none;
+        outline: none;
+  }
+
+  .trashIcon:hover {
+    fill: #B90445;
+  }
+
+
+  @media only screen and (max-width: 1700px){
+    .noteContainer {
+        grid-template-columns: repeat(5, 1fr);
+    }
+  }
+  @media only screen and (max-width: 1500px){
+    .noteContainer {
+        grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  @media only screen and (max-width: 1200px){
+    .noteContainer {
+        grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media only screen and (max-width: 800px){
+    .noteContainer {
+        grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media only screen and (max-width: 590px){
+    .noteContainer {
+        grid-template-columns: repeat(1, 1fr);
+    }
   }
