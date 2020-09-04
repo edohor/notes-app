@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import "./Note.css"
+import ReactMarkdown from 'react-markdown';
 
 let noteList = [];
 const saveIcon = (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -143,12 +144,23 @@ Shopping list:
     if (notes.length>0){
         displayNotes = notes.map((note, index) => {
             // console.log("note = ", note);
+        let markedUpContentTiles = <ReactMarkdown source={note.content}/>
             return <div className="note"
-                        onClick={() => openNote(note.id, index)}>{note.content}</div>
+                        onClick={() => openNote(note.id, index)}>{markedUpContentTiles}</div>
         })
     }
 
+    let markedUpContent = <ReactMarkdown source={content} className="markedUpContent"/>
+
     console.log("editMode = ", editMode);
+    let windowContent = <textarea className="textInput"
+        onChange={e => setContent(e.target.value)}
+        value={content}
+        disabled={editMode ? false : true}>{content}</textarea>
+
+    if (!editMode){
+        windowContent = markedUpContent;
+    }
     let modalWindow = (
         <div id="myModal" class="modal" style={{display: modal ? 'block' : 'none' }}>
             <div class="modalWindow">
@@ -160,10 +172,7 @@ Shopping list:
                             editMode ? () => editNote(content) : () => enableEditNote()}>{editMode ? saveIcon : editIcon}</span>
                 </div>
 
-                <textarea className="textInput"
-                onChange={e => setContent(e.target.value)}
-                value={content}
-                disabled={editMode ? false : true}>{content}</textarea>
+                {windowContent}
             </div>
         </div>
     )

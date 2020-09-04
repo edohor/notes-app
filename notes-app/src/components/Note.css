@@ -1,7 +1,7 @@
 .noteContainer {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    grid-gap: 20px;
+    grid-gap: 40px;
     grid-auto-rows: minmax(100px, auto);
     margin: 50px auto;
     width: 80%;
@@ -11,15 +11,20 @@
 .note {
     box-sizing:border-box;
     border-radius: 10px;
-    padding: 20px;
+    padding: 5px 20px;
     width: 200px;
     height: 200px;
     word-wrap: break-word;
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
 }
 .note:hover{
     cursor: pointer;
     border: 3px solid #B90445;
+    padding: 2px 17px;
+}
+.note *{
+    font-size: 1em;
 }
 
 .addNote {
@@ -27,17 +32,19 @@
     background-color: #B90445;
     text-align: center;
     box-shadow: none;
+    padding: 20px;
 }
 .addNote:hover{
     cursor: pointer;
     border: 1px solid #B90445;
+    padding: 20px;
 }
 
 .bigWhitePlus{
     color: white;
     font-weight: 500;
     font-size: 64px;
-    line-height: 135px;
+    line-height: 145px;
     width: 200px;
     height: 198px;
     align-items: center;
@@ -112,6 +119,16 @@
   }
   .textInput:focus {
         outline: none;
+  }
+  .textInput:disabled {
+        background-color: white;
+  }
+
+  .markedUpContent{
+    width: 96%;
+    height: 400px;
+    margin-top: 20px;
+    padding: 15px;
   }
 
   .trashIcon:hover {
