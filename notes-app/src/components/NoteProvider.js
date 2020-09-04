@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import "./Note.css"
 
 let noteList = [];
-let newNoteClicked = true;
 
 function NoteProvider (props) {
 
@@ -12,13 +11,12 @@ function NoteProvider (props) {
         JSON.parse(localStorage.getItem("notes")) : []
         );
     const [noteId, setNoteId] = useState(-1);
-
-    console.log("localStorage = ", JSON.parse(localStorage.getItem("notes")));
-
-    noteList = notes;
-
     const [modal, setModal] = useState(false);
     const [content, setContent] = useState("");
+    const [newNoteClicked, setNewNoteClicked] = useState(true);
+    const [editMode, setEditMode] = useState(false);
+
+    noteList = notes;
 
     function addNote(content) {
         console.log("[addNote] content = ", content);
@@ -47,9 +45,8 @@ function NoteProvider (props) {
         localStorage.setItem("notes", JSON.stringify(noteList));
 
         setNotes(JSON.parse(localStorage.getItem("notes")));
-        
-        newNoteClicked = false;
-    
+        setNewNoteClicked(false);
+        setEditMode(false);
         setNoteId(largestId)
     }
 
@@ -68,8 +65,9 @@ function NoteProvider (props) {
 
         localStorage.setItem("notes", JSON.stringify(noteList));
 
-        setNoteId(-1);
         setNotes(JSON.parse(localStorage.getItem("notes")));
+        setEditMode(false);
+        setNoteId(-1);
     }
 
     function deleteNote(deleteNodeId) {
@@ -91,7 +89,8 @@ function NoteProvider (props) {
     }
 
     function openModalWindow() {
-        newNoteClicked = true;
+        setEditMode(true);
+        setNewNoteClicked(true);
         setModal(true);
     }
 
@@ -101,7 +100,7 @@ function NoteProvider (props) {
     }
 
     function enableEditNote() {
-        setModal(false);
+        setEditMode(true);
     }
 
     function openNote(openedNoteId, index) {
@@ -111,7 +110,8 @@ function NoteProvider (props) {
         setNoteId(openedNoteId)
         console.log("[openNote] noteId = ", noteId);
 
-        newNoteClicked = false;
+        setEditMode(false);
+        setNewNoteClicked(false);
         setModal(true);
     }
 
@@ -126,6 +126,7 @@ function NoteProvider (props) {
         })
     }
 
+    console.log("editMode = ", editMode);
     let modalWindow = (
         <div id="myModal" class="modal" style={{display: modal ? 'block' : 'none' }}>
             <div class="modalWindow">
@@ -133,12 +134,14 @@ function NoteProvider (props) {
                     <span class="close" onClick={closeModalWindow}>&larr;</span>
                     <span class="delete" onClick={() => deleteNote(noteId)}>Delete</span>
                     <span class="edit" onClick={newNoteClicked ? 
-                        () => addNote(content) : () => editNote(content)}>Save</span>
+                        () => addNote(content) : 
+                            editMode ? () => editNote(content) : () => enableEditNote()}>{editMode ? "Save" : "Edit"}</span>
                 </div>
 
                 <textarea className="textInput"
                 onChange={e => setContent(e.target.value)}
-                value={content}>{content}</textarea>
+                value={content}
+                disabled={editMode ? false : true}>{content}</textarea>
             </div>
         </div>
     )
