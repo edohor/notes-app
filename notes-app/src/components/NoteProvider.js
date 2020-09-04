@@ -5,28 +5,15 @@ let noteList = [];
 
 function NoteProvider (props) {
 
-    // let obj = {};
-    // obj[0] = "Hello";
-    // let obj1 = {};
-    // obj1[1] = "There";
-    // noteList.push(obj, obj1);
-    // console.log("noteList = ", noteList);
-
-    // noteList.map(note => {
-    //     console.log("note = ", note);
-    //     localStorage.setItem("notes", note);
-    // })
-    
-    // if(JSON.parse(localStorage.getItem("notes")).length>0){
-    //     localStorage.setItem("notes", JSON.stringify(noteList));
-    // }
-
     // check if there are notes saved in local storage
     const [notes, setNotes] = useState(
         (localStorage.getItem("notes")!==null && JSON.parse(localStorage.getItem("notes")).length>0) ? 
         JSON.parse(localStorage.getItem("notes")) : []
         );
+
     noteList = notes;
+
+    const [modal, setModal] = useState(false);
 
     // const notes = useNotes();
 
@@ -63,6 +50,18 @@ function NoteProvider (props) {
         setNotes(JSON.parse(localStorage.getItem("notes")))
     }
 
+    function openModalWindow() {
+        setModal(true);
+    }
+
+    function closeModalWindow() {
+        setModal(false);
+    }
+
+    function enableEditNote() {
+        setModal(false);
+    }
+
     console.log("notes = ", notes);
 
     let displayNotes = [];
@@ -74,10 +73,24 @@ function NoteProvider (props) {
         })
     }
 
+    let modalWindow = (
+        <div id="myModal" class="modal" style={{display: modal ? 'block' : 'none' }}>
+            <div class="modalWindow">
+                <div className="tools">
+                    <span class="close" onClick={closeModalWindow}>&larr;</span>
+                    <span class="delete" onClick={deleteNote}>Delete</span>
+                    <span class="edit" onClick={enableEditNote}>Save</span>
+                </div>
+                <textarea className="textInput">Some text in the Modal..</textarea>
+            </div>
+        </div>
+    )
+
     return (
         <div className="noteContainer">
-            <div onClick={addNote}>AddNote</div>
+            <div className="note" onClick={openModalWindow}>AddNote</div>
             {displayNotes}
+            {modalWindow}
         </div>
     )
 
