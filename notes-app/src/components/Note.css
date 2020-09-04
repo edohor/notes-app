@@ -24,7 +24,7 @@
     padding: 2px 17px;
 }
 .note *{
-    font-size: 1em;
+    font-size: 0.8em;
 }
 
 .addNote {
@@ -78,11 +78,12 @@
     padding: 20px;
     border: 1px solid #888;
     width: 50%; /* Could be more or less, depending on screen size */
+    overflow: scroll;
   }
 
   .tools{
       height: 30px;
-      padding: 0 10px
+      padding: 0 10px;
   }
   
   /* The Close Button */
@@ -127,7 +128,6 @@
   .markedUpContent{
     width: 96%;
     height: 400px;
-    margin-top: 20px;
     padding: 15px;
   }
 
