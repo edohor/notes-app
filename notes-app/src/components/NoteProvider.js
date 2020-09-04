@@ -1,23 +1,32 @@
 import React, { useState } from 'react';
+import "./Note.css"
+
+let noteList = [];
 
 function NoteProvider (props) {
 
-    let noteList = [];
-    let obj = {};
-    obj[0] = "Hello";
-    let obj1 = {};
-    obj1[1] = "There";
-    // obj[1] = "There";
-    noteList.push(obj, obj1);
-    console.log("noteList = ", noteList);
+    // let obj = {};
+    // obj[0] = "Hello";
+    // let obj1 = {};
+    // obj1[1] = "There";
+    // noteList.push(obj, obj1);
+    // console.log("noteList = ", noteList);
 
-    noteList.map(note => {
-        console.log("note = ", note);
-        localStorage.setItem("notes", note);
-    })
-    localStorage.setItem("notes", JSON.stringify(noteList));
-    const [notes, setNotes] = useState(JSON.parse(localStorage.getItem("notes")));
-    const [notesId, setNotesId] = useState(localStorage.getItem("notesId"));
+    // noteList.map(note => {
+    //     console.log("note = ", note);
+    //     localStorage.setItem("notes", note);
+    // })
+    
+    // if(JSON.parse(localStorage.getItem("notes")).length>0){
+    //     localStorage.setItem("notes", JSON.stringify(noteList));
+    // }
+
+    // check if there are notes saved in local storage
+    const [notes, setNotes] = useState(
+        (localStorage.getItem("notes")!==null && JSON.parse(localStorage.getItem("notes")).length>0) ? 
+        JSON.parse(localStorage.getItem("notes")) : []
+        );
+    noteList = notes;
 
     // const notes = useNotes();
 
@@ -33,8 +42,8 @@ function NoteProvider (props) {
     // const selectedNote = notes.getSelected();
 
     function addNote() {
-        let obj = {};
-        obj[noteList.length] = "General Kenobi";
+        let obj = {value: noteList.length, label: "General Kenobi"};
+        // obj[noteList.length] = "General Kenobi";
         noteList.push(obj);
         console.log("new noteList = ", noteList);
 
@@ -43,17 +52,32 @@ function NoteProvider (props) {
         setNotes(JSON.parse(localStorage.getItem("notes")))
     }
 
+    function deleteNote(index) {
+        console.log("index = ", index);
+
+        noteList.splice(index, 1);
+        console.log("noteList after delete = ", noteList);
+
+        localStorage.setItem("notes", JSON.stringify(noteList));
+
+        setNotes(JSON.parse(localStorage.getItem("notes")))
+    }
+
     console.log("notes = ", notes);
 
-    let displayNotes = notes.map((note, index) => {
-        console.log("note label = ", note[index]);
-        return <div>{note[index]}</div>
-    })
+    let displayNotes = [];
+    if (notes.length>0){
+        displayNotes = notes.map((note, index) => {
+            console.log("note = ", note);
+            return <div className="note"
+                        onClick={() => deleteNote(index)}>{note.label}</div>
+        })
+    }
 
     return (
-        <div>
-        <div onClick={addNote}>AddNote</div>
-        {displayNotes}
+        <div className="noteContainer">
+            <div onClick={addNote}>AddNote</div>
+            {displayNotes}
         </div>
     )
 
