@@ -3,6 +3,7 @@ import "./Note.css"
 import ReactMarkdown from 'react-markdown';
 
 let noteList = [];
+let newNoteClicked = false;
 const saveIcon = (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path fill-rule="evenodd" clip-rule="evenodd" d="M17.59 3.59C17.21 3.21 16.7 3 16.17 3H5C3.89 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V7.83C21 7.3 20.79 6.79 20.41 6.42L17.59 3.59ZM12 19C10.34 19 9 17.66 9 16C9 14.34 10.34 13 12 13C13.66 13 15 14.34 15 16C15 17.66 13.66 19 12 19ZM7 9H13C14.1 9 15 8.1 15 7C15 5.9 14.1 5 13 5H7C5.9 5 5 5.9 5 7C5 8.1 5.9 9 7 9Z" fill="black" fill-opacity="0.54"/>
     </svg>);
@@ -23,7 +24,6 @@ function NoteProvider () {
     const [noteId, setNoteId] = useState(-1);
     const [modal, setModal] = useState(false);
     const [content, setContent] = useState("");
-    const [newNoteClicked, setNewNoteClicked] = useState(true);
     const [editMode, setEditMode] = useState(false);
 
     noteList = notes;
@@ -43,7 +43,7 @@ function NoteProvider () {
         localStorage.setItem("notes", JSON.stringify(noteList));
 
         setNotes(JSON.parse(localStorage.getItem("notes")));
-        setNewNoteClicked(false);
+        // newNoteClicked = false;
         setEditMode(false);
         setNoteId(largestId)
     }
@@ -60,7 +60,9 @@ function NoteProvider () {
 
         localStorage.setItem("notes", JSON.stringify(noteList));
 
-        setNoteId(-1);
+        if (!newNoteClicked){
+            setNoteId(-1);
+        }
         setNotes(JSON.parse(localStorage.getItem("notes")));
         setEditMode(false);
     }
@@ -95,10 +97,11 @@ Shopping list:
 * toilet paper
 `;
 
-        setContent(text)
-        setEditMode(true);
-        setNewNoteClicked(true);
+        setContent(text);
+        newNoteClicked = true;
         setModal(true);
+        addNote(text);
+        setEditMode(true);
     }
 
     function closeModalWindow() {
@@ -117,7 +120,7 @@ Shopping list:
         setContent(notes[index].content);
         setNoteId(openedNoteId)
         setEditMode(false);
-        setNewNoteClicked(false);
+        newNoteClicked = false;
         setModal(true);
     }
 
@@ -150,9 +153,7 @@ Shopping list:
                 <div className="tools">
                     <span class="close" onClick={closeModalWindow}>&larr;</span>
                     <span class="delete" onClick={() => deleteNote(noteId)}>{trashIcon}</span>
-                    <span class="edit" onClick={newNoteClicked ? 
-                        () => addNote(content) : 
-                            editMode ? () => editNote(content) : () => enableEditNote()}>{editMode ? saveIcon : editIcon}</span>
+                    <span class="edit" onClick={editMode ? () => editNote(content) : () => enableEditNote()}>{editMode ? saveIcon : editIcon}</span>
                 </div>
 
                 {windowContent}
