@@ -13,7 +13,7 @@ const trashIcon = (<svg width="20" height="20" viewBox="0 0 14 18" fill="none" x
     <path  className="trashIcon" d="M13.9844 0.984375V3H0.015625V0.984375H3.48438L4.51562 0H9.48438L10.5156 0.984375H13.9844ZM1 15.9844V3.98438H13V15.9844C13 16.5156 12.7969 16.9844 12.3906 17.3906C11.9844 17.7969 11.5156 18 10.9844 18H3.01562C2.48438 18 2.01562 17.7969 1.60938 17.3906C1.20312 16.9844 1 16.5156 1 15.9844Z" fill="#666666"/>
     </svg>);
 
-function NoteProvider (props) {
+function NoteProvider () {
 
     // check if there are notes saved in local storage
     const [notes, setNotes] = useState(
@@ -29,28 +29,16 @@ function NoteProvider (props) {
     noteList = notes;
 
     function addNote(content) {
-        console.log("[addNote] content = ", content);
 
-        // TEST
+        // find largest id number and set it as id for new note
         let largestId = 0;
-        console.log("[addNote] noteList = ", noteList);
         if(noteList.length>0){
             let checkIds = noteList.reduce((a, c) => (a[c.id] = c, a), {});
-    
-            //Object looks like:
-            console.log("test", checkIds);
-    
-            // find the largest key // maybe a good way to decide the next key
             largestId = Math.max(...Object.keys(checkIds))+1;
-            console.log("largest ID", largestId);
         }
 
-
-
         let obj = {id: largestId, content: content};
-        // obj[noteList.length] = "General Kenobi";
         noteList.push(obj);
-        console.log("new noteList = ", noteList);
 
         localStorage.setItem("notes", JSON.stringify(noteList));
 
@@ -61,35 +49,29 @@ function NoteProvider (props) {
     }
 
     function editNote(content) {
-        console.log("[editNote] content = ", content);
-        console.log("[editNote] noteId = ", noteId);
         
         let obj = {id: noteId, content: content};
 
         for(let i=0; i<noteList.length; i++){
             if(noteList[i].id === noteId){
-                console.log("noteList [i] = ", noteList[i]);
                 noteList.splice(i, 1, obj);
             }
         }
 
         localStorage.setItem("notes", JSON.stringify(noteList));
 
+        setNoteId(-1);
         setNotes(JSON.parse(localStorage.getItem("notes")));
         setEditMode(false);
-        setNoteId(-1);
     }
 
     function deleteNote(deleteNodeId) {
-        console.log("[deleteNote] deleteNodeId = ", deleteNodeId);
 
         for(let i=0; i<noteList.length; i++){
             if(noteList[i].id === deleteNodeId){
-                console.log("noteList [i] = ", noteList[i]);
                 noteList.splice(i, 1);
             }
         }
-        console.log("noteList after delete = ", noteList);
 
         localStorage.setItem("notes", JSON.stringify(noteList));
 
@@ -99,6 +81,7 @@ function NoteProvider (props) {
     }
 
     function openModalWindow() {
+
         let text = `This is a note
 ==============
 
@@ -111,6 +94,7 @@ Shopping list:
 * oranges
 * toilet paper
 `;
+
         setContent(text)
         setEditMode(true);
         setNewNoteClicked(true);
@@ -118,41 +102,39 @@ Shopping list:
     }
 
     function closeModalWindow() {
+
         setContent("")
         setModal(false);
     }
 
     function enableEditNote() {
+
         setEditMode(true);
     }
 
     function openNote(openedNoteId, index) {
-        console.log("[openNote] openedNoteId = ", openedNoteId);
-        console.log("[openNote] index = ", index);
+
         setContent(notes[index].content);
         setNoteId(openedNoteId)
-        console.log("[openNote] noteId = ", noteId);
-
         setEditMode(false);
         setNewNoteClicked(false);
         setModal(true);
     }
 
-    console.log("notes = ", notes);
-
+    // get all notes to display on screen
     let displayNotes = [];
     if (notes.length>0){
         displayNotes = notes.map((note, index) => {
-            // console.log("note = ", note);
         let markedUpContentTiles = <ReactMarkdown source={note.content}/>
             return <div className="note"
                         onClick={() => openNote(note.id, index)}>{markedUpContentTiles}</div>
         })
     }
 
+    // set up marked up content
     let markedUpContent = <ReactMarkdown source={content} className="markedUpContent"/>
 
-    console.log("editMode = ", editMode);
+    // set up editable text area with note text
     let windowContent = <textarea className="textInput"
         onChange={e => setContent(e.target.value)}
         value={content}
@@ -161,6 +143,7 @@ Shopping list:
     if (!editMode){
         windowContent = markedUpContent;
     }
+
     let modalWindow = (
         <div id="myModal" class="modal" style={{display: modal ? 'block' : 'none' }}>
             <div class="modalWindow">
@@ -176,8 +159,6 @@ Shopping list:
             </div>
         </div>
     )
-
-    console.log("content = ", content);
 
     return (
         <div className="noteContainer">
